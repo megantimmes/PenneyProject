@@ -17,6 +17,8 @@ def data_gen(n: int, # the number of decks to be generated
     After processing the decks, one could store them as such:
         processed_decks = unprocessed_decks
         np.savez_compressed('../data/processed.npz', saved_decks=processed_decks)
+    Once the now processed data is safely stored, load a zero-element/zero-dimension array to 'unprocessed.npz' as follows:
+        np.savez_compressed('../data/unprocessed.npz', saved_decks=np.array([]))
     Finally, if these processed decks ever needed to be retrieved, one could execute code similar to the above:
         processed_file = np.load('../data/processed.npz')
         processed_decks = processed_file['saved_decks']
