@@ -9,12 +9,19 @@ def data_gen(n: int, # the number of decks to be generated
     Raw data consists of decks of 52 cards with 26 blacks (0) and 26 reds (1).
     Deck order is randomized.
     The user may choose how many decks (n) they would like to generate.
-    If there is existing data in 'unprocessed.npy', the new decks generated will be added to the decks in 'unprocessed.npy'.
+    If there is existing data in 'unprocessed.npz', the new decks generated will be added to the decks in 'unprocessed.npz'.
     Should there not be existing data, the new decks are simply stored as 'unprocessed.npy' in the data folder.
-    Once the saved unprocessed data is processed, load a zero-element/zero-dimension array to 'unprocessed.npy' as follows:
-        np.save('../data/unprocessed.npy', np.array([]))
+    To load the unprocessed data in the data processing file, execute these lines:
+        unprocessed_file = np.load('../data/unprocessed.npz')
+        unprocessed_decks = unprocessed_file['saved_decks']
+    After processing the decks, one could store them as such:
+        processed_decks = unprocessed_decks
+        np.savez_compressed('../data/processed.npz', saved_decks=processed_decks)
+    Finally, if these processed decks ever needed to be retrieved, one could execute code similar to the above:
+        processed_file = np.load('../data/processed.npz')
+        processed_decks = processed_file['saved_decks']
     '''
-
+    
     np.random.seed(440) # ensure results are reproducable
     
     blacks = np.zeros(26, dtype=np.int8) # make an array with 26 zeros (blacks)
@@ -23,15 +30,16 @@ def data_gen(n: int, # the number of decks to be generated
     
     new_decks = np.array([np.random.permutation(initial_deck) for deck in range(n)]) # make an n x 52 array of randomized decks
 
-    if os.path.isfile('../data/unprocessed.npy'): # if the 'unprocessed.npy' file exists
-        unprocessed_decks = np.load('../data/unprocessed.npy') # load the unprocessed_decks
+    if os.path.isfile('../data/unprocessed.npz'): # if the 'unprocessed.npz' file exists
+        unprocessed_file = np.load('../data/unprocessed.npz') # load the file with the unprocessed decks
+        unprocessed_decks = unprocessed_file['saved_decks'] # load the unprocessed decks from said file
         if len(unprocessed_decks) != 0: # if the unprocessed_decks are not an empty array
             decks_to_save = np.concatenate((unprocessed_decks, new_decks)) # add the new decks to the old unprocessed ones
         else: # if the unprocessed decks are an empty array
             decks_to_save = new_decks # simply prepare the new decks to be saved
-    else: # if the 'unprocessed.npy' file does not exist
+    else: # if the 'unprocessed.npz' file does not exist
         decks_to_save = new_decks # simply prepare the new decks to be saved
     # print(len(decks_to_save)) # good way to check if decks are being added correctly
 
-    # Save the decks to 'unprocessed.npy' regardless of if there are already decks there or not
-    np.save('../data/unprocessed.npy', decks_to_save)
+    # Save the decks to 'unprocessed.npz' regardless of if there are already decks there or not
+    np.savez_compressed('../data/unprocessed.npz', saved_decks=decks_to_save)
