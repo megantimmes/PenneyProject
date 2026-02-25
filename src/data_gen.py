@@ -1,7 +1,7 @@
 import numpy as np
 import os
 
-def data_gen(n: int, # the number of decks to be generated
+def data_gen(n: int # the number of decks to be generated
             ) -> None: # will send the unprocessed decks to be stored in the data folder
     
     '''
@@ -45,3 +45,17 @@ def data_gen(n: int, # the number of decks to be generated
 
     # Save the decks to 'unprocessed.npz' regardless of if there are already decks there or not
     np.savez_compressed('../data/unprocessed.npz', saved_decks=decks_to_save)
+
+def preview_unprocessed(n: int # the number of decks to display
+                       ) -> None: # will print the decks to the screen
+
+    '''
+    Prints the first few unprocessed decks to the screen.
+    '''
+
+    unprocessed_file = np.load('../data/unprocessed.npz')
+    unprocessed_decks = unprocessed_file['saved_decks']
+    if len(unprocessed_decks) != 0:
+        print(unprocessed_decks[:n, :])
+    else:
+        print('There are no unprocessed decks that are waiting to be processed.')
