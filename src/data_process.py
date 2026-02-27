@@ -1,66 +1,135 @@
 #import data
-#rrr
-#rrb
-#rbb
-#rbr
-#bbb
-#brb
-#bbr
-#brr
-
-#output passed to heatmap should be 4 8x8 arrays 
 
 import numpy as np
 from itertools import permutations
 import pandas as pd
 
-patterns = ['000','001','010','011','100','101','110','111'] # the possible choices for each player
 
-def str_to_pattern(s): #ensures the patterns are in the correct data type
-    return np.array([int(c) for c in s], dtype=np.int8)
+class Data_Process:
+    def __init__(self):
+        self.data = np.load('data/unprocessed.npz')
+        self.decks = self.data['saved_decks']
+        self.choices = ['000','001','010','011','100','101','110','111'] # the possible choices for each player
+        self.wins = pd.DataFrame(
+            0,
+            index=self.choices,
+            columns=self.choices
+        )
 
-def deck_score(deck, pair):
-    """
-    deck: np.array shape (52,)
-    pair: (my_pattern_str, opponent_pattern_str)
-    """
-    my_choice = str_to_pattern(pair[0])
-    opp_choice = str_to_pattern(pair[1])
-    my_score = 0
-    opponent_score = 0
+        self.draws = pd.DataFrame(
+            0,
+            index=self.choices,
+            columns=self.choices
+        )
 
-    i = 0
-    n = len(deck)
+        self.ron_wins = pd.DataFrame(
+            0,
+            index=self.choices,
+            columns=self.choices
+        )
 
-    while i <= n - 3:
-        window = deck[i:i+3]
+        self.ron_draws = pd.DataFrame(
+            0,
+            index=self.choices,
+            columns=self.choices
+        )
+        self.games = pd.DataFrame(0, index=self.choices, columns=self.choices)
 
-        if np.array_equal(window, opp_choice):
-            opponent_score += 1
-            i += 3     #check if the pattern matches opponent choice
-        elif np.array_equal(window, my_choice):
-            my_score += 1
-            i += 3 #check if it matches my choice
-        else:
-            i += 1         # slide window if no match
+    def str_to_choice(self, s): #ensures the patterns are in the correct data type
+        return np.array([int(c) for c in s], dtype=np.int8)
 
-    return my_score, opponent_score
+    def original_deck_score(self, deck, pair):
+        """
+        deck: np.array shape (52,)
+        pair: (my_pattern_str, opponent_pattern_str)
+        """
+        my_choice = self.str_to_choice(pair[0])
+        opp_choice = self.str_to_choice(pair[1])
+        my_score = 0
+        opponent_score = 0
 
-def process_data(data):
-    labels = patterns
+        i = 0
+        n = len(deck)
 
-    wins_df = pd.DataFrame(
-        0,
-        index=labels,
-        columns=labels
-    )
+        while i <= n - 3:
+            window = deck[i:i+3]
 
-    for deck in data:
-        for pair in permutations(patterns, 2):
-            my_choice, opp_choice = pair
-            my_score, opp_score = deck_score(deck, pair)
+            if np.array_equal(window, opp_choice):
+                opponent_score += 1
+                i += 3     #check if the pattern matches opponent choice
+            elif np.array_equal(window, my_choice):
+                my_score += 1
+                i += 3 #check if it matches my choice
+            else:
+                i += 1         # slide window if no match
 
-            if my_score > opp_score:
-                wins_df.loc[my_choice, opp_choice] += 1
+        return my_score, opponent_score
+    
 
-    return wins_df
+    def ron_deck_score(self, deck, pair):
+        my_choice = self.str_to_choice(pair[0])
+        opp_choice = self.str_to_choice(pair[1])
+
+        my_score = 0
+        opponent_score = 0
+
+        cards_since_last_match = 0
+
+        i = 0
+        n = len(deck)
+
+        while i <= n - 3:
+            window = deck[i:i+3]
+            cards_since_last_match += 1  
+
+            if np.array_equal(window, opp_choice):
+                opponent_score += cards_since_last_match
+                cards_since_last_match = 0
+                i += 3
+            elif np.array_equal(window, my_choice):
+                my_score += cards_since_last_match
+                cards_since_last_match = 0
+                i += 3
+            else:
+                i += 1
+
+        return my_score, opponent_score
+
+    def process_data(self):
+        for deck in self.decks:
+            for pair in permutations(self.choices, 2):
+                my_choice, opp_choice = pair
+                my_score, opp_score = self.original_deck_score(deck, pair)
+
+                my_score2, opp_score2 = self.ron_deck_score(deck, pair)
+
+                self.games.loc[my_choice, opp_choice] += 1
+
+                if my_score > opp_score:
+                    self.wins.loc[my_choice, opp_choice] += 1
+                elif my_score == opp_score:
+                    self.draws.loc[my_choice, opp_choice] += 1
+
+                if my_score2 > opp_score2:
+                    self.ron_wins.loc[my_choice, opp_choice] += 1
+                elif my_score2 == opp_score2:
+                    self.ron_draws.loc[my_choice, opp_choice] += 1
+
+       
+        win_pct = self.wins / self.games
+        draw_pct = self.draws / self.games
+
+        ron_win_pct = self.ron_wins / self.games
+        ron_draw_pct = self.ron_draws / self.games
+
+        win_pct.to_csv('data/original_game_win_pct.csv')
+        draw_pct.to_csv('data/original_game_draw_pct.csv')
+        ron_win_pct.to_csv('data/ron_game_win_pct.csv')
+        ron_draw_pct.to_csv('data/ron_game_draw_pct.csv')
+
+        return 
+
+
+
+process = Data_Process()
+process.process_data()
