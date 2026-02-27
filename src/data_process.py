@@ -6,9 +6,9 @@ import pandas as pd
 
 
 class Data_Process:
-    def __init__(self):
-        self.data = np.load('data/unprocessed.npz')
-        self.decks = self.data['saved_decks']
+    def __init__(self,data):
+        self.data = data
+        #self.decks = self.data['saved_decks']
         self.choices = ['000','001','010','011','100','101','110','111'] # the possible choices for each player
         self.wins = pd.DataFrame(
             0,
@@ -96,7 +96,7 @@ class Data_Process:
         return my_score, opponent_score
 
     def process_data(self):
-        for deck in self.decks:
+        for deck in self.data:
             for pair in permutations(self.choices, 2):
                 my_choice, opp_choice = pair
                 my_score, opp_score = self.original_deck_score(deck, pair)
@@ -130,6 +130,13 @@ class Data_Process:
         return 
 
 
+n = 20
+np.random.seed(440) # ensure results are reproducable
 
-process = Data_Process()
+blacks = np.zeros(26, dtype=np.int8) # make an array with 26 zeros (blacks)
+reds = np.ones(26, dtype=np.int8) # make an array with 26 ones (reds)
+initial_deck = np.concatenate((blacks, reds)) # join the two arrays to make the initial deck of cards
+
+new_decks = np.array([np.random.permutation(initial_deck) for deck in range(n)])
+process = Data_Process(new_decks)
 process.process_data()
