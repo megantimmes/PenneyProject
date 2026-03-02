@@ -38,16 +38,5 @@ while(True):
         processor.finalize_processing()
         print('Processed!')
 
-    elif choice == 3:
-        np.savez_compressed(
-            'data/unprocessed.npz',
-            saved_decks=np.empty((0, 52), dtype=np.int8)
-        )
-        np.savez_compressed(
-            'data/processed.npz',
-            saved_decks=np.empty((0, 52), dtype=np.int8)
-        )
-
-
     else:
         print('Not a valid input. Please try again.')
