@@ -32,8 +32,8 @@ def data_gen(n: int # the number of decks to be generated
     
     new_decks = np.array([np.random.permutation(initial_deck) for deck in range(n)]) # make an n x 52 array of randomized decks
 
-    if os.path.isfile('../data/unprocessed.npz'): # if the 'unprocessed.npz' file exists
-        unprocessed_file = np.load('../data/unprocessed.npz') # load the file with the unprocessed decks
+    if os.path.isfile('data/unprocessed.npz'): # if the 'unprocessed.npz' file exists
+        unprocessed_file = np.load('data/unprocessed.npz') # load the file with the unprocessed decks
         unprocessed_decks = unprocessed_file['saved_decks'] # load the unprocessed decks from said file
         if len(unprocessed_decks) != 0: # if the unprocessed_decks are not an empty array
             decks_to_save = np.concatenate((unprocessed_decks, new_decks)) # add the new decks to the old unprocessed ones
@@ -44,7 +44,7 @@ def data_gen(n: int # the number of decks to be generated
     # print(len(decks_to_save)) # good way to check if decks are being added correctly
 
     # Save the decks to 'unprocessed.npz' regardless of if there are already decks there or not
-    np.savez_compressed('../data/unprocessed.npz', saved_decks=decks_to_save)
+    np.savez_compressed('data/unprocessed.npz', saved_decks=decks_to_save)
 
 def preview_unprocessed(n: int # the number of decks to display
                        ) -> None: # will print the decks to the screen
@@ -53,7 +53,7 @@ def preview_unprocessed(n: int # the number of decks to display
     Prints the first few unprocessed decks to the screen.
     '''
 
-    unprocessed_file = np.load('../data/unprocessed.npz')
+    unprocessed_file = np.load('data/unprocessed.npz')
     unprocessed_decks = unprocessed_file['saved_decks']
     if len(unprocessed_decks) != 0:
         print(unprocessed_decks[:n, :])

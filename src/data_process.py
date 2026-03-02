@@ -1,8 +1,7 @@
-#import data
-
 import numpy as np
 from itertools import permutations
 import pandas as pd
+import os
 
 
 class Data_Process:
@@ -134,6 +133,52 @@ class Data_Process:
         ron_win_pct.to_csv('data/ron_game_win_pct.csv')
         ron_draw_pct.to_csv('data/ron_game_draw_pct.csv')
 
-
-
+        self.finalize_processing()
         return 
+    
+    def finalize_processing(self):
+
+        # Load unprocessed decks
+        unprocessed_file = np.load('data/unprocessed.npz')
+        unprocessed_decks = unprocessed_file['saved_decks']
+
+        # Ensure unprocessed is 2D
+        if unprocessed_decks.ndim == 1:
+            unprocessed_decks = unprocessed_decks.reshape(-1, 52)
+
+        # Load processed decks safely
+        if os.path.isfile('data/processed.npz'):
+            try:
+                processed_file = np.load('data/processed.npz')
+                old_processed = processed_file['saved_decks']
+
+                if old_processed.ndim == 1:
+                    old_processed = old_processed.reshape(-1, 52)
+
+            except:
+                old_processed = np.empty((0, 52), dtype=np.int8)
+        else:
+            old_processed = np.empty((0, 52), dtype=np.int8)
+
+        # Concatenate safely
+        if old_processed.size == 0:
+            decks_to_save = unprocessed_decks
+        elif unprocessed_decks.size == 0:
+            decks_to_save = old_processed
+        else:
+            decks_to_save = np.concatenate(
+                (old_processed, unprocessed_decks),
+                axis=0
+            )
+
+        # Save processed decks
+        np.savez_compressed(
+            'data/processed.npz',
+            saved_decks=decks_to_save
+        )
+
+        # Clear unprocessed safely
+        np.savez_compressed(
+            'data/unprocessed.npz',
+            saved_decks=np.empty((0, 52), dtype=np.int8)
+        )
