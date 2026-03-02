@@ -32,7 +32,7 @@ def make_figure(filename_org: str, filename_ron: str) -> None:
     Original Game Heatmap
     '''
     games= pd.read_csv('data/games.csv') 
-    games= games.iloc[0,0] #get number of games from csv for title
+    games= games.iloc[0,1] #get number of games from csv for title
 
     proc = pd.read_csv('data/original_game_win_pct.csv', dtype={'Unnamed: 0': str}) #read first column as string to keep 3num structure for indexing
     proc = proc.set_index(proc.columns[0]) #Convert first column to index for heatmap plotting
@@ -65,7 +65,7 @@ def make_figure(filename_org: str, filename_ron: str) -> None:
     '''
 
     games= pd.read_csv('data/games.csv') 
-    games= games.iloc[0,0] #get number of games from csv for title
+    games= games.iloc[0,1] #get number of games from csv for title
 
     proc = pd.read_csv('data/ron_game_win_pct.csv', dtype={'Unnamed: 0': str}) #read first column as string to keep 3num structure for indexing
     proc = proc.set_index(proc.columns[0]) #Convert first column to index for heatmap plotting
