@@ -12,15 +12,15 @@ def data_gen(n: int # the number of decks to be generated
     If there is existing data in 'unprocessed.npz', the new decks generated will be added to the decks in 'unprocessed.npz'.
     Should there not be existing data, the new decks are simply stored as 'unprocessed.npy' in the data folder.
     To load the unprocessed data in the data processing file, execute these lines:
-        unprocessed_file = np.load('../data/unprocessed.npz')
+        unprocessed_file = np.load('data/unprocessed.npz')
         unprocessed_decks = unprocessed_file['saved_decks']
     After processing the decks, one could store them as such:
         processed_decks = unprocessed_decks
-        np.savez_compressed('../data/processed.npz', saved_decks=processed_decks)
+        np.savez_compressed('data/processed.npz', saved_decks=processed_decks)
     Once the now processed data is safely stored, load a zero-element/zero-dimension array to 'unprocessed.npz' as follows:
-        np.savez_compressed('../data/unprocessed.npz', saved_decks=np.array([]))
+        np.savez_compressed('data/unprocessed.npz', saved_decks=np.array([]))
     Finally, if these processed decks ever needed to be retrieved, one could execute code similar to the above:
-        processed_file = np.load('../data/processed.npz')
+        processed_file = np.load('data/processed.npz')
         processed_decks = processed_file['saved_decks']
     '''
     
