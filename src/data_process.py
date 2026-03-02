@@ -8,7 +8,7 @@ import pandas as pd
 class Data_Process:
     def __init__(self,data):
         self.data = data
-        #self.decks = self.data['saved_decks']
+        self.decks = self.data['saved_decks']
         self.choices = ['000','001','010','011','100','101','110','111'] # the possible choices for each player
         self.wins = pd.DataFrame(
             0,
@@ -96,7 +96,7 @@ class Data_Process:
         return my_score, opponent_score
 
     def process_data(self):
-        for deck in self.data:
+        for deck in self.decks:
             for pair in permutations(self.choices, 2):
                 my_choice, opp_choice = pair
                 my_score, opp_score = self.original_deck_score(deck, pair)
@@ -122,21 +122,18 @@ class Data_Process:
         ron_win_pct = self.ron_wins / self.games
         ron_draw_pct = self.ron_draws / self.games
 
+        self.games.to_csv('data/games.csv')
+
+        self.wins.to_csv('data/original_game_wins.csv')
+        self.draws.to_csv('data/original_game_draws.csv')
+        self.ron_wins.to_csv('data/ron_game_wins.csv')
+        self.ron_draws.to_csv('data/ron_game_draws.csv')
+
         win_pct.to_csv('data/original_game_win_pct.csv')
         draw_pct.to_csv('data/original_game_draw_pct.csv')
         ron_win_pct.to_csv('data/ron_game_win_pct.csv')
         ron_draw_pct.to_csv('data/ron_game_draw_pct.csv')
 
+
+
         return 
-
-
-n = 20
-np.random.seed(440) # ensure results are reproducable
-
-blacks = np.zeros(26, dtype=np.int8) # make an array with 26 zeros (blacks)
-reds = np.ones(26, dtype=np.int8) # make an array with 26 ones (reds)
-initial_deck = np.concatenate((blacks, reds)) # join the two arrays to make the initial deck of cards
-
-new_decks = np.array([np.random.permutation(initial_deck) for deck in range(n)])
-process = Data_Process(new_decks)
-process.process_data()
