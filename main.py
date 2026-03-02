@@ -1,5 +1,6 @@
 from src.data_process import Data_Process
 from src.data_gen import data_gen
+from src.Viz import make_figure
 import numpy as np
 import os
 
@@ -27,7 +28,7 @@ while(True):
     choice = int(input('Enter 2 to process decks '))
     
     if choice == 0:
-        pass
+        make_figure('original', 'ron')
     elif choice == 1:
         n = int(input('How many decks? '))
         data_gen(n)
@@ -36,5 +37,17 @@ while(True):
         processor.process_data()
         processor.finalize_processing()
         print('Processed!')
+
+    elif choice == 3:
+        np.savez_compressed(
+            'data/unprocessed.npz',
+            saved_decks=np.empty((0, 52), dtype=np.int8)
+        )
+        np.savez_compressed(
+            'data/processed.npz',
+            saved_decks=np.empty((0, 52), dtype=np.int8)
+        )
+
+
     else:
         print('Not a valid input. Please try again.')
