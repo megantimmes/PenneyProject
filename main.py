@@ -44,8 +44,19 @@ while(True):
             processor.process_data()
             processor.finalize_processing()
             print('Processed!')
-            make_figure()
+            make_figure(processed_number)
     elif choice == 3:
         break
+    elif choice == 4:
+        np.savez_compressed(
+            'data/unprocessed.npz',
+            saved_decks=np.empty((0, 52), dtype=np.int8)
+        )
+        np.savez_compressed(
+            'data/processed.npz',
+            saved_decks=np.empty((0, 52), dtype=np.int8)
+        )
+
+
     else:
         print('Not a valid input. Please try again.')
