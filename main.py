@@ -31,7 +31,7 @@ while(True):
     choice = int(input('Option: '))
 
     if choice == 0:
-        make_figure()
+        make_figure(processed_number)
     elif choice == 1:
         n = int(input('How many decks? '))
         print('\n')

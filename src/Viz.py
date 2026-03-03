@@ -15,7 +15,7 @@ def rb(x):
     '''
     return ''.join('B' if i == '0' else 'R' for i in str(x)) 
 
-def make_figure() -> None:
+def make_figure(games: int) -> None:
     '''
     Makes Heatmaps using presaved CSV Files 
     '''
@@ -44,7 +44,6 @@ def make_figure() -> None:
     t_org = pd.read_csv('data/original_game_draws.csv', dtype={'Unnamed: 0': str})
     t_org = t_org.set_index(t_org.columns[0]) 
     t_org = t_org.iloc[0,1]
-    games = w_org_1 + w_org_2 + t_org
 
     fig, ax = plt.subplots(1,1, figsize=(6,6))
     annot = np.full(shape=proc.shape, fill_value='', dtype='<U10')  
