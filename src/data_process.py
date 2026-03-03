@@ -74,6 +74,7 @@ class Data_Process:
         
         processed_file = np.load('data/processed.npz')
         processed_decks = processed_file['saved_decks']
+
         self.games = len(processed_decks)
 
     def str_to_choice(self, s): #ensures the patterns are in the correct data type
