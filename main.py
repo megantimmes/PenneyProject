@@ -28,7 +28,7 @@ while(True):
     choice = int(input('Enter 2 to process decks '))
     
     if choice == 0:
-        make_figure('original', 'ron', processed_number)
+        make_figure()
     elif choice == 1:
         n = int(input('How many decks? '))
         data_gen(n)
@@ -37,6 +37,7 @@ while(True):
         processor.process_data()
         processor.finalize_processing()
         print('Processed!')
+        make_figure()
 
     else:
         print('Not a valid input. Please try again.')
