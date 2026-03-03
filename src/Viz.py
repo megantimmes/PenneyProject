@@ -15,15 +15,13 @@ def rb(x):
     '''
     return ''.join('B' if i == '0' else 'R' for i in str(x)) 
 
-def make_figure(filename_org: str, filename_ron: str, games: int) -> None:
+def make_figure() -> None:
     '''
-    Inputs:
-        filename_org: The original game file will be saved in the default figures folder
-        filename2_ron: The Ron's game file will be saved in the default figures folder
+    Makes Heatmaps using presaved CSV Files 
     '''
 
-    full_filename_org = os.path.join(PATH_FIGURES, filename_org)
-    full_filename_ron = os.path.join(PATH_FIGURES, filename_ron)
+    full_filename_org = os.path.join(PATH_FIGURES, 'orignal')
+    full_filename_ron = os.path.join(PATH_FIGURES, 'ron')
 
     if not os.path.exists(PATH_FIGURES):
         os.mkdir(PATH_FIGURES)
@@ -39,6 +37,15 @@ def make_figure(filename_org: str, filename_ron: str, games: int) -> None:
     t_proc = t_proc.set_index(t_proc.columns[0])
     np.fill_diagonal(t_proc.values, 0) 
 
+    w_org = pd.read_csv('data/original_game_wins.csv', dtype={'Unnamed: 0': str})
+    w_org = w_org.set_index(w_org.columns[0])
+    w_org_1 = w_org.iloc[0,1]
+    w_org_2 = w_org.iloc[1,0]
+    t_org = pd.read_csv('data/original_game_draws.csv', dtype={'Unnamed: 0': str})
+    t_org = t_org.set_index(t_org.columns[0]) 
+    t_org = t_org.iloc[0,1]
+    games = w_org_1 + w_org_2 + t_org
+
     fig, ax = plt.subplots(1,1, figsize=(6,6))
     annot = np.full(shape=proc.shape, fill_value='', dtype='<U10')  
     for i in range(annot.shape[0]):
@@ -53,17 +60,13 @@ def make_figure(filename_org: str, filename_ron: str, games: int) -> None:
     ax.set_yticklabels([rb(i.get_text()) for i in ax.get_yticklabels()])
     plt.xlabel("My Choice") 
     plt.ylabel("Opponent Choice") 
-    plt.title(f'My Chance of Win(Draw)\nBy Tricks\nN={games}') #Make sure to change to proper varialbe
+    plt.title(f'My Chance of Win(Draw)\nBy Tricks\nN={games}') 
     plt.savefig(full_filename_org, bbox_inches='tight')
     plt.show()
 
     '''
     Ron's Game 
     '''
-
-    games= pd.read_csv('data/games.csv') 
-    games= games.iloc[0,1] #get number of games from csv for title
-
     proc = pd.read_csv('data/ron_game_win_pct.csv', dtype={'Unnamed: 0': str}) #read first column as string to keep 3num structure for indexing
     proc = proc.set_index(proc.columns[0]) #Convert first column to index for heatmap plotting
     np.fill_diagonal(proc.values, 0) # Set diagonal to 0 from NAN for greying heatmap diagonal
@@ -86,7 +89,7 @@ def make_figure(filename_org: str, filename_ron: str, games: int) -> None:
     ax.set_yticklabels([rb(i.get_text()) for i in ax.get_yticklabels()])
     plt.xlabel("My Choice") 
     plt.ylabel("Opponent Choice") 
-    plt.title(f'My Chance of Win(Draw)\nBy Cards\nN={games}') #Make sure to change to proper varialbe
+    plt.title(f'My Chance of Win(Draw)\nBy Cards\nN={games}') 
     plt.savefig(full_filename_ron, bbox_inches='tight')
     plt.show()
 
