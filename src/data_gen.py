@@ -24,8 +24,6 @@ def data_gen(n: int # the number of decks to be generated
         processed_decks = processed_file['saved_decks']
     '''
     
-    np.random.seed(440) # ensure results are reproducable
-    
     blacks = np.zeros(26, dtype=np.int8) # make an array with 26 zeros (blacks)
     reds = np.ones(26, dtype=np.int8) # make an array with 26 ones (reds)
     initial_deck = np.concatenate((blacks, reds)) # join the two arrays to make the initial deck of cards
