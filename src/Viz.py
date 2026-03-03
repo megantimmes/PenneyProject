@@ -20,7 +20,7 @@ def make_figure(games: int) -> None:
     Makes Heatmaps using presaved CSV Files 
     '''
 
-    full_filename_org = os.path.join(PATH_FIGURES, 'orignal')
+    full_filename_org = os.path.join(PATH_FIGURES, 'original')
     full_filename_ron = os.path.join(PATH_FIGURES, 'ron')
 
     if not os.path.exists(PATH_FIGURES):
