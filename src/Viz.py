@@ -32,10 +32,12 @@ def make_figure(games: int) -> None:
     proc = pd.read_csv('data/original_game_win_pct.csv', dtype={'Unnamed: 0': str}) #read first column as string to keep 3num structure for indexing
     proc = proc.set_index(proc.columns[0]) #Convert first column to index for heatmap plotting
     np.fill_diagonal(proc.values, 0) # Set diagonal to 0 from NAN for greying heatmap diagonal
+    proc = proc.T #transpose to have my choice as x axis and opponent choice as y axis for heatmap
 
     t_proc = pd.read_csv('data/original_game_draw_pct.csv', dtype={'Unnamed: 0': str})
     t_proc = t_proc.set_index(t_proc.columns[0])
     np.fill_diagonal(t_proc.values, 0) 
+    t_proc = t_proc.T
 
     w_org = pd.read_csv('data/original_game_wins.csv', dtype={'Unnamed: 0': str})
     w_org = w_org.set_index(w_org.columns[0])
@@ -69,10 +71,12 @@ def make_figure(games: int) -> None:
     proc = pd.read_csv('data/ron_game_win_pct.csv', dtype={'Unnamed: 0': str}) #read first column as string to keep 3num structure for indexing
     proc = proc.set_index(proc.columns[0]) #Convert first column to index for heatmap plotting
     np.fill_diagonal(proc.values, 0) # Set diagonal to 0 from NAN for greying heatmap diagonal
+    proc = proc.T #transpose to have my choice as x axis and opponent choice as y axis for heatmap
 
     t_proc = pd.read_csv('data/ron_game_draw_pct.csv', dtype={'Unnamed: 0': str})
     t_proc = t_proc.set_index(t_proc.columns[0])
     np.fill_diagonal(t_proc.values, 0) 
+    t_proc = t_proc.T  
 
     fig, ax = plt.subplots(1,1, figsize=(6,6))
     annot = np.full(shape=proc.shape, fill_value='', dtype='<U10')  
