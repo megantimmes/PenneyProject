@@ -6,6 +6,18 @@ import os
 
 
 while(True):
+
+    """
+    Main interactive loop for managing deck data.
+
+    Options:
+        0 - Display heatmap visualization
+        1 - Generate new decks
+        2 - Process unprocessed decks
+        3 - Exit program
+        4 - Reset all stored data
+    """
+    
     if os.path.isfile('data/processed.npz'):
         processed_file = np.load('data/processed.npz')
         processed_decks = processed_file['saved_decks']
