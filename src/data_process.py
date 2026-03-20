@@ -51,21 +51,18 @@ class Data_Process:
         self.choices = ['000','001','010','011','100','101','110','111'] # the possible choices for each player
         self.choice_arrays = {c: np.array([int(x) for x in c], dtype=np.int8) for c in self.choices}
         def load_or_create_csv(path, choices):
-            """Load CSV or create empty DataFrame with given choices."""
-            if os.path.isfile(path):
-                df = pd.read_csv(path, index_col=0)
-                # Ensure labels are strings
-                df.index = df.index.astype(str).str.strip()
-                df.columns = df.columns.astype(str).str.strip()
-                for c in choices:
-                    if c not in df.index:
-                        df.loc[c] = 0
-                    if c not in df.columns:
-                        df[c] = 0
-                df = df.loc[choices, choices]
-                return df.astype(int)
-            else:
-                return pd.DataFrame(0, index=choices, columns=choices, dtype=int)
+          if os.path.isfile(path):
+              df = pd.read_csv(path, index_col=0)
+
+              # FIX: force proper string format with leading zeros
+              df.index = df.index.map(lambda x: str(x).zfill(3))
+              df.columns = df.columns.map(lambda x: str(x).zfill(3))
+
+              df = df.reindex(index=choices, columns=choices, fill_value=0)
+
+              return df.astype(int)
+          else:
+              return pd.DataFrame(0, index=choices, columns=choices, dtype=int)
 
         self.wins = load_or_create_csv('data/original_game_wins.csv', self.choices)
         self.draws = load_or_create_csv('data/original_game_draws.csv', self.choices)
