@@ -17,9 +17,39 @@ To run the code, open the terminal and set the directory to the location of the 
 uv run main.py
 ```
 
-The most recent heat maps will be shown, and the user may enter responses to the prompts that will appear in the terminal. After answering the prompts, new heat maps will be generated.  
+After running main.py as above, the screen will print the number of processed decks and the number of decks waiting to be processed. The user will then be given three options:
+- Enter 0 to print the current heatmap
+- Enter 1 to add decks
+- Enter 2 to process decks
+- Enter 3 to end program
+
+When a user enters 0, 1, or 2, they will be able to select another option. For example, the user can print the current heatmap, add decks, process those decks, and print the current heatmap again.
 
 
 ### Project Findings
 
-Type here
+The results of our project agree with the findings in the original variation of the Humble-Nishiyama version, but slightly differ for Ron's variation. 
+
+In the original variation of the Humble-Nishiyama game, the findings reflect that if player 1 chooses a sequence first, there is an optimal sequence that player 2 can choose to maximize the likelihood of them beating player 1. Here are the possible sequences player 1 can choose followed by the best choices for player 2 in the original variation of the game. Each optimal sequence for player 2 is followed by its win percent (tie percent) over player 1's sequence: 
+* BBB -> RBB  ...  99(0)
+* BBR -> RBB  ...  94(4)
+* BRB -> BBR  ...  80(8)
+* BRR -> BBR  ...  88(7)
+* RBB -> RRB  ...  88(7)
+* RBR -> RRB  ...  80(8)
+* RRB -> BRR  ...  94(4)
+* RRR -> BRR  ...  99(0)
+
+Player 1 is at a significant disadvantage assuming player 2 chooses the optimal sequence in response to player 1's chosen sequence. However, for player 1 to maximize their odds of winning or tying the game, they should choose either BRB or RBR. For player 2 to find the optimal sequence, they should flip the middle card in player 1's sequence, add it to the start of their sequence, and remove the fourth item in the sequence to end up with an optimal three card sequence.
+
+However, the optimal sequences slightly deviate for Ron's variation of the game. Here are the possible sequences player 1 can choose followed by the best choices for player 2 in Ron's variation of the game. Each optimal sequence for player 2 is followed by its win percent (tie percent) over player 1's sequence:
+* BBB -> RBB  ...  100(0)
+* BBR -> RBB  ...  100(0)
+* BRB -> RRB* ...  94(2)
+* BRR -> BBR  ...  95(1)
+* RBB -> RRB  ...  95(1)
+* RBR -> BBR* ...  94(2)
+* RRB -> BRR  ...  100(0)
+* RRR -> BRR  ...  100(0)
+
+In the above results, notice that two sequences—-BRB and RBR—-have a star * next to them. These are the sequences for player 1 that have an optimal sequence for player 2 that is different in Ron's variation. When responding to these "alternating" sequences, player 2 should take the middle card and add it twice to the beginning of the sequence, removing the last two cards in the sequence to end up with the optimal three card sequence. For all other player 1 sequences, player 2 can use the same strategy to find the optimal sequence as they would in the original variation. As in the original variation, player 1 is best off choosing BRB or RBR. In Ron's variation, player 1 is at an even greater disadvantage assuming player 2 chooses the optimal sequences in response to player 1.
