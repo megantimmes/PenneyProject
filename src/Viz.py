@@ -39,14 +39,6 @@ def make_figure(games: int) -> None:
     np.fill_diagonal(t_proc.values, 0) 
     t_proc = t_proc.T
 
-    w_org = pd.read_csv('data/original_game_wins.csv', dtype={'Unnamed: 0': str})
-    w_org = w_org.set_index(w_org.columns[0])
-    w_org_1 = w_org.iloc[0,1]
-    w_org_2 = w_org.iloc[1,0]
-    t_org = pd.read_csv('data/original_game_draws.csv', dtype={'Unnamed: 0': str})
-    t_org = t_org.set_index(t_org.columns[0]) 
-    t_org = t_org.iloc[0,1]
-
     fig, ax = plt.subplots(1,1, figsize=(6,6))
     annot = np.full(shape=proc.shape, fill_value='', dtype='<U10')  
     for i in range(annot.shape[0]):
