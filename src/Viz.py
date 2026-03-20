@@ -17,6 +17,7 @@ def rb(x):
 
 def make_figure(games: int) -> None:
     '''
+    Inputs: number of games processed
     Makes Heatmaps using presaved CSV Files 
     '''
 
