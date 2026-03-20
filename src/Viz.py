@@ -53,7 +53,7 @@ def make_figure(games: int) -> None:
     ax.set_yticklabels([rb(i.get_text()) for i in ax.get_yticklabels()])
     plt.xlabel("My Choice") 
     plt.ylabel("Opponent Choice") 
-    plt.title(f'My Chance of Win(Draw)\nBy Tricks\nN={games}') 
+    plt.title(f'My Chance of Win(Draw)\nBy Tricks\nN={games:,}') 
     plt.savefig(full_filename_org, bbox_inches='tight')
     plt.show()
 
@@ -84,7 +84,7 @@ def make_figure(games: int) -> None:
     ax.set_yticklabels([rb(i.get_text()) for i in ax.get_yticklabels()])
     plt.xlabel("My Choice") 
     plt.ylabel("Opponent Choice") 
-    plt.title(f'My Chance of Win(Draw)\nBy Cards\nN={games}') 
+    plt.title(f'My Chance of Win(Draw)\nBy Cards\nN={games:,}') 
     plt.savefig(full_filename_ron, bbox_inches='tight')
     plt.show()
 
