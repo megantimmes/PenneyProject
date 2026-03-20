@@ -44,7 +44,6 @@ while(True):
             processor.process_data()
             processor.finalize_processing()
             print('Processed!')
-            make_figure(processed_number)
     elif choice == 3:
         break
     elif choice == 4:
